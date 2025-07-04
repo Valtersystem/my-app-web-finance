@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus } from 'lucide-vue-next';
 import { type BreadcrumbItem } from '@/types';
 
-// Props
+// Props recebidas do AccountController
 defineProps<{
   accounts: Array<{
     id: number;
@@ -21,6 +21,8 @@ defineProps<{
     description: string | null;
     initial_balance: string;
   }>;
+  accountTypes: Array<any>; // Prop para os tipos de conta
+  institutions: Array<any>; // Prop para as instituições
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -30,10 +32,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-// Controlo do Modal
-const setAccountsModal = ref(false);
-const openModal = () => setAccountsModal.value = true;
-const closeModal = () => setAccountsModal.value = false;
+// Controlo do Modal (nome da variável corrigido para consistência)
+const isNewAccountModalOpen = ref(false);
+const openModal = () => isNewAccountModalOpen.value = true;
+const closeModal = () => isNewAccountModalOpen.value = false;
 </script>
 
 <template>
@@ -90,7 +92,12 @@ const closeModal = () => setAccountsModal.value = false;
             </div>
         </div>
 
-        <CreateAccountModal :show="setAccountsModal" @close="closeModal" />
+        <CreateAccountModal
+            :show="isNewAccountModalOpen"
+            :account-types="accountTypes"
+            :institutions="institutions"
+            @close="closeModal"
+        />
 
     </AppLayout>
 </template>
