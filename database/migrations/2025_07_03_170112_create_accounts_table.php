@@ -11,8 +11,11 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // Alterações aqui:
+            $table->foreignId('account_type_id')->constrained()->onDelete('cascade');
+            $table->foreignId('institution_id')->nullable()->constrained()->onDelete('set null');
+
             $table->string('name');
-            $table->string('type');
             $table->text('description')->nullable();
             $table->string('color', 7)->nullable();
             $table->decimal('initial_balance', 15, 2)->default(0);

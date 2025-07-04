@@ -1,18 +1,14 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 // Nossos componentes
 import AppLayout from '@/layouts/AppLayout.vue';
-import Modal from '@/components/Modal.vue';
-import InputError from '@/components/InputError.vue';
+import CreateAccountModal from './Partials/CreateAccountModal.vue';
 
 // Componentes da UI
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch'; // Importar o novo Switch
 import { Plus } from 'lucide-vue-next';
 import { type BreadcrumbItem } from '@/types';
 
@@ -35,37 +31,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 // Controlo do Modal
-const isNewAccountModalOpen = ref(false);
-const openModal = () => isNewAccountModalOpen.value = true;
-const closeModal = () => {
-    isNewAccountModalOpen.value = false;
-    form.reset();
-};
-
-// Definições do Formulário
-const accountTypes = {
-    checking: 'Checking account',
-    savings: 'Savings account',
-    credit_card: 'Credit Card',
-    cash: 'Cash',
-};
-
-const accountColors = ['#3b82f6', '#8b5cf6', '#22c55e', '#f97316'];
-
-const form = useForm({
-    name: '',
-    type: 'checking',
-    initial_balance: 0.00,
-    description: '',
-    color: accountColors[0],
-    include_in_dashboard: true,
-});
-
-const submit = () => {
-    form.post(route('accounts.store'), {
-        onSuccess: () => closeModal(),
-    });
-};
+const setAccountsModal = ref(false);
+const openModal = () => setAccountsModal.value = true;
+const closeModal = () => setAccountsModal.value = false;
 </script>
 
 <template>
@@ -122,61 +90,7 @@ const submit = () => {
             </div>
         </div>
 
-        <Modal :show="isNewAccountModalOpen" @close="closeModal" max-width="lg" class-more="dark:bg-gray-800 rounded-lg">
-            <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">New Account</h2>
+        <CreateAccountModal :show="setAccountsModal" @close="closeModal" />
 
-                <form @submit.prevent="submit" class="mt-6 space-y-6">
-                    <div>
-                        <Label for="initial_balance">Initial Balance</Label>
-                        <Input id="initial_balance" type="number" step="0.01" v-model="form.initial_balance" class="mt-1 block w-full text-2xl h-auto p-0 border-0 focus:ring-0" />
-                        <InputError :message="form.errors.initial_balance" class="mt-2" />
-                    </div>
-
-                    <div>
-                        <Label for="name">Account Name</Label>
-                        <Input id="name" v-model="form.name" class="mt-1 block w-full" placeholder="E.g. Carteira" />
-                        <InputError :message="form.errors.name" class="mt-2" />
-                    </div>
-
-                    <div>
-                        <Label for="type">Account Type</Label>
-                        <select id="type" v-model="form.type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                           <option v-for="(label, key) in accountTypes" :key="key" :value="key">{{ label }}</option>
-                        </select>
-                        <InputError :message="form.errors.type" class="mt-2" />
-                    </div>
-
-                    <div>
-                        <Label for="description">Description</Label>
-                        <Input id="description" v-model="form.description" class="mt-1 block w-full" placeholder="Optional" />
-                        <InputError :message="form.errors.description" class="mt-2" />
-                    </div>
-
-                    <div>
-                        <Label>Account Color</Label>
-                        <div class="mt-2 flex items-center space-x-3">
-                            <label v-for="color in accountColors" :key="color" class="cursor-pointer">
-                                <input type="radio" v-model="form.color" :value="color" class="sr-only" />
-                                <span class="h-8 w-8 rounded-full block border-2"
-                                      :style="{ backgroundColor: color, borderColor: form.color === color ? color : 'transparent' }">
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <Label for="include_in_dashboard">Include sum on dashboard</Label>
-                        <Switch id="include_in_dashboard" v-model:checked="form.include_in_dashboard" />
-                    </div>
-                     <InputError :message="form.errors.include_in_dashboard" />
-
-                    <div class="flex justify-end gap-4 pt-4">
-                        <Button variant="secondary" @click="closeModal">Cancel</Button>
-                        <Button type="submit" :disabled="form.processing">Save</Button>
-                    </div>
-                </form>
-            </div>
-        </Modal>
     </AppLayout>
 </template>

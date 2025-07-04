@@ -13,16 +13,21 @@ class Account extends Model
 
     protected $fillable = [
         'user_id',
+        'account_type_id',
+        'institution_id',
         'name',
-        'type',
         'description',
         'color',
         'initial_balance',
         'include_in_dashboard',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     */
     protected function casts(): array
     {
+        // CORREÇÃO: Restaurar o conteúdo desta função
         return [
             'initial_balance' => 'decimal:2',
             'include_in_dashboard' => 'boolean',
@@ -37,5 +42,15 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function accountType(): BelongsTo
+    {
+        return $this->belongsTo(AccountType::class);
+    }
+
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(Institution::class);
     }
 }

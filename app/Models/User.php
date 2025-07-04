@@ -71,4 +71,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(RecurringTransaction::class);
     }
+
+    // ADICIONE ESTA FUNÇÃO
+    public function goals(): HasMany
+    {
+        return $this->hasMany(Goal::class);
+    }
 }
