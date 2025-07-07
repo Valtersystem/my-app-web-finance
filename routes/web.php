@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InstitutionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('accounts', AccountController::class);
     Route::resource('categories', CategoryController::class);
+    Route::resource('institutions', InstitutionController::class);
 });
 
 
